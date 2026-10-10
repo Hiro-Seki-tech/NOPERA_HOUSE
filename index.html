@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NOPERA Generator</title>
+  <title>NOPERA HOUSE</title>
 
   <!--
   ============================================================
@@ -1478,9 +1478,13 @@
       overflow-wrap: anywhere;
     }
 
+
+    #plip-history-modal article + article { margin-top: 18px; }
+    #plip-history-modal h3 { margin: 0 0 4px; font-size: 15px; }
+    #plip-history-modal ul { margin: 0; padding-left: 1.5em; }
     .trajectory-history-content {
       color: #dbeafe;
-      white-space: pre-wrap;
+      white-space: normal;
       overflow-wrap: anywhere;
       font-size: 14px;
       line-height: 1.8;
@@ -2285,8 +2289,8 @@
        ======================================================== -->
   <script>
     window.PLIP_CONFIG = {
-      workTitle: "NOPERA Generator",
-      subtitle: "NOVELA HOUSE｜小説をNOPERAへ育てるジェネレータ",
+      workTitle: "NOPERA HOUSE",
+      subtitle: "文章・挿絵・音楽で、物語を体験するNOPERA制作工房",
       symbolButtonFile: "./NOPERA_button_link.html",
       plipLinksUrl: "https://hiro-seki-tech.github.io/Produce-your-Life-with-IP/links",
 
@@ -2298,8 +2302,8 @@
 
       footerCredit: "© 2026 PLIP & Hiro-Seki-Tech",
       footerNotice: "無断転載及びハルシネーションはお断り申し上げます。",
-      version: "1.0",
-      updated: "2026.10.08",
+      version: "1.1",
+      updated: "2026.10.11",
 
       usageTitle: "NOPERA HOUSEの使い方",
       usageText:
@@ -2318,45 +2322,7 @@
         "【迷ったときは】\n" +
         "各タブの「？」には、操作手順と注意点をまとめています。原稿はTXT推奨。挿絵・音楽を使わない作品も制作できます。作業中は一体型NOPERAをこまめに保存してください。",
       trajectoryTitle: "NOPERA HOUSEの軌跡",
-      trajectoryText:
-        "Version 1.0　2026.10.08\n" +
-        "・編集用の一体型NOPERAと公開用ZIPの相互変換を完成。公開作品の再読み込み・再編集に対応。\n" +
-        "・公開用素材の同名衝突を自動回避し、読み込み結果の表示と全体・各タブのヘルプを整備。基本機能完成の公開前育成版へ。\n" +
-        "\nVersion 0.4　2026.10.08\n" +
-        "・完成NOPERAの読書体験を固め、表紙から物語開始、目次・現在地・文字設定・SOUND・しおりを備えたReader仕様を確立。\n" +
-        "・挿絵・音楽の登録一覧と音楽対象の挿絵選択を、現在プレビュー中のページ単位で表示するよう改善。長編作品でも編集対象を見つけやすくしました。\n" +
-        "\nVersion 0.3　2026.10.05\n" +
-        "・「表紙」タブを発展させ、BOOK／OPERAの開始演出、タイトルサイズ調整、装丁・舞台デザイン選択に対応。\n" +
-        "・音楽演出に「現在の音楽を5秒かけてフェードアウト」を追加し、挿絵を節目として自然に音楽を終えられるようにしました。\n" +        "・別の音楽へ切り替わる際は、再生中の曲を3秒かけてフェードアウトしてから次の曲を再生するよう改善。\n" +        "・目次・挿絵・音楽の編集画面に明示的な［キャンセル］を追加し、編集中の変更を迷わず取り消せるよう改善。\n" +
-
-
-        "・長編編集に強いページ独立管理方式を導入し、目次・挿絵・音楽の編集導線と位置喪失時の警告を改善。\n" +
-        "・プレビューに物語の現在地表示を追加し、現在の章・節を確認しやすくしました。\n" +
-        "・新たに「表紙」タブを追加し、タイトル・著者等・BOOK／OPERA開始演出の基本設定と表紙プレビューに対応。\n" +
-        "\nVersion 0.2　2026.10.01\n" +
-        "・読書プレビューで、音楽付き挿絵のY軸中央が表示領域へ入ったときに紐づく曲を自動再生する試験機能へ変更。\n" +
-        "・冒頭ですでに中央点が表示されている挿絵は開始時に判定し、高速スクロールでも中央通過を取りこぼしにくい方式にしました。\n" +
-        "\nVersion 0.2　2026.09.29\n" +
-        "・音楽タブを実装。登録済み挿絵に1曲を紐づけ、曲名・1回再生／ループ再生を設定できるようにしました。\n" +
-        "・音楽ファイルのドラッグ＆ドロップ、試聴・編集・削除、音楽保存先フォルダ、仮プロジェクト保存／読込に対応。\n" +
-        "\nVersion 0.1　2026.09.21\n" +
-        "・挿絵登録を実装。本文位置の取得、画像の仮表示、左右・中央配置、サイズ調整、本文編集時の位置追従に対応。\n" +
-        "・開発中の再テストをしやすくするため、本文・目次・ページ設定・挿絵をまとめて保存／読込できる仮プロジェクト機能を追加。\n" +
-        "・挿絵タブの基本UIを整備。画像保存先、本文位置、画像選択、配置・サイズ、登録済み一覧の流れを分かりやすく整理。\n" +
-        "\nVersion 0.1　2026.09.10\n" +
-        "・制作工程を「小説 → 目次 → 挿絵 → 音楽 → 保存・出力」の5タブ構成へ整理。PDFは対応を維持しつつ非推奨であることを明示。\n" +
-        "\nVersion 0.1　2026.09.09\n" +
-        "・TXT読込をUTF-8／Shift_JISの両方に対応し、日本語原稿の文字化けを改善。\n" +
-        "・NOPERAプレビューのA−／A＋による本文文字サイズ変更とフォント切替に対応。\n" +
-        "・本文選択から自由な3階層の目次を登録し、本文位置順の自動整列・編集・削除に対応。\n" +
-        "・目次タイトルから登録済みの本文位置へ移動できる基本ジャンプ機能を追加。\n" +
-        "・長編編集に備え、PCでは左の設定欄と右の本文プレビューを独立スクロール化。\n" +
-        "・目次位置ごとのページ切替を追加し、右プレビューを1ページずつ表示する方式に対応。\n" +
-        "・DOCX原稿の読み込みに対応。Wordの装飾は持ち込まず、文字と改行だけをNOPERA本文へ取り込む方式を追加。\n" +
-        "・文字情報を持つPDFの読み込みに対応。紙面レイアウトは再現せず、文字と改行だけをNOPERA本文へ取り込む方式を追加。\n" +
-        "\nVersion 0.1　2026.09.08\n" +
-        "・PLIP標準母型を基に、NOVELA HOUSEのNOPERA Generator制作を開始。\n" +
-        "・第1段階として作品名・使い方・Version・軌跡などの基本設定をNOPERA用へ更新。"
+      // 軌跡は下部 #plip-history-modal の article を編集（LINK HPと共用）。
     };
   </script>
 
@@ -2423,7 +2389,7 @@
 
       <div class="plip-title-wrap">
         <div class="plip-title-line">
-          <h1 id="plip-work-title" class="plip-title">NOPERA Generator</h1>
+          <h1 id="plip-work-title" class="plip-title">NOPERA HOUSE</h1>
           <span id="plip-header-version" class="plip-header-version">v0.4</span>
         </div>
         <p id="plip-subtitle" class="plip-subtitle">NOVELA HOUSE｜小説をNOPERAへ育てるジェネレータ</p>
@@ -3073,7 +3039,92 @@
         <h2 id="trajectory-title" class="plip-modal-title">作品の軌跡</h2>
         <button class="plip-modal-close" type="button" data-close-modal="trajectory-modal" aria-label="閉じる">×</button>
       </div>
-      <div id="trajectory-copy" class="trajectory-history-content"></div>
+      <div id="trajectory-copy" class="trajectory-history-content">
+        <div id="plip-history-modal">
+          <article>
+            <h3>Version 1.1　2026.10.11</h3>
+            <ul>
+              <li>作品の正式名称を「NOPERA HOUSE」に統一し、公開作品としての表示を整備。</li>
+              <li>シンボルボタンに映像演出を導入し、BGM・SONG・OFFの切替と再生曲名表示の連携を改善。</li>
+              <li>作品の軌跡をLINK HPから取得できる共通形式へ対応。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Version 1.0　2026.10.08</h3>
+            <ul>
+              <li>編集用の一体型NOPERAと公開用ZIPの相互変換を完成。公開作品の再読み込み・再編集に対応。</li>
+              <li>公開用素材の同名衝突を自動回避し、読み込み結果の表示と全体・各タブのヘルプを整備。基本機能完成の公開前育成版へ。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Version 0.4　2026.10.08</h3>
+            <ul>
+              <li>完成NOPERAの読書体験を固め、表紙から物語開始、目次・現在地・文字設定・SOUND・しおりを備えたReader仕様を確立。</li>
+              <li>挿絵・音楽の登録一覧と音楽対象の挿絵選択を、現在プレビュー中のページ単位で表示するよう改善。長編作品でも編集対象を見つけやすくしました。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Version 0.3　2026.10.05</h3>
+            <ul>
+              <li>「表紙」タブを発展させ、BOOK／OPERAの開始演出、タイトルサイズ調整、装丁・舞台デザイン選択に対応。</li>
+              <li>音楽演出に「現在の音楽を5秒かけてフェードアウト」を追加し、挿絵を節目として自然に音楽を終えられるようにしました。</li>
+              <li>別の音楽へ切り替わる際は、再生中の曲を3秒かけてフェードアウトしてから次の曲を再生するよう改善。</li>
+              <li>目次・挿絵・音楽の編集画面に明示的な［キャンセル］を追加し、編集中の変更を迷わず取り消せるよう改善。</li>
+              <li>長編編集に強いページ独立管理方式を導入し、目次・挿絵・音楽の編集導線と位置喪失時の警告を改善。</li>
+              <li>プレビューに物語の現在地表示を追加し、現在の章・節を確認しやすくしました。</li>
+              <li>新たに「表紙」タブを追加し、タイトル・著者等・BOOK／OPERA開始演出の基本設定と表紙プレビューに対応。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Version 0.2　2026.10.01</h3>
+            <ul>
+              <li>読書プレビューで、音楽付き挿絵のY軸中央が表示領域へ入ったときに紐づく曲を自動再生する試験機能へ変更。</li>
+              <li>冒頭ですでに中央点が表示されている挿絵は開始時に判定し、高速スクロールでも中央通過を取りこぼしにくい方式にしました。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Version 0.2　2026.09.29</h3>
+            <ul>
+              <li>音楽タブを実装。登録済み挿絵に1曲を紐づけ、曲名・1回再生／ループ再生を設定できるようにしました。</li>
+              <li>音楽ファイルのドラッグ＆ドロップ、試聴・編集・削除、音楽保存先フォルダ、仮プロジェクト保存／読込に対応。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Version 0.1　2026.09.21</h3>
+            <ul>
+              <li>挿絵登録を実装。本文位置の取得、画像の仮表示、左右・中央配置、サイズ調整、本文編集時の位置追従に対応。</li>
+              <li>開発中の再テストをしやすくするため、本文・目次・ページ設定・挿絵をまとめて保存／読込できる仮プロジェクト機能を追加。</li>
+              <li>挿絵タブの基本UIを整備。画像保存先、本文位置、画像選択、配置・サイズ、登録済み一覧の流れを分かりやすく整理。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Version 0.1　2026.09.10</h3>
+            <ul>
+              <li>制作工程を「小説 → 目次 → 挿絵 → 音楽 → 保存・出力」の5タブ構成へ整理。PDFは対応を維持しつつ非推奨であることを明示。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Version 0.1　2026.09.09</h3>
+            <ul>
+              <li>TXT読込をUTF-8／Shift_JISの両方に対応し、日本語原稿の文字化けを改善。</li>
+              <li>NOPERAプレビューのA−／A＋による本文文字サイズ変更とフォント切替に対応。</li>
+              <li>本文選択から自由な3階層の目次を登録し、本文位置順の自動整列・編集・削除に対応。</li>
+              <li>目次タイトルから登録済みの本文位置へ移動できる基本ジャンプ機能を追加。</li>
+              <li>長編編集に備え、PCでは左の設定欄と右の本文プレビューを独立スクロール化。</li>
+              <li>目次位置ごとのページ切替を追加し、右プレビューを1ページずつ表示する方式に対応。</li>
+              <li>DOCX原稿の読み込みに対応。Wordの装飾は持ち込まず、文字と改行だけをNOPERA本文へ取り込む方式を追加。</li>
+              <li>文字情報を持つPDFの読み込みに対応。紙面レイアウトは再現せず、文字と改行だけをNOPERA本文へ取り込む方式を追加。</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Version 0.1　2026.09.08</h3>
+            <ul>
+              <li>PLIP標準母型を基に、NOVELA HOUSEのNOPERA Generator制作を開始。</li>
+              <li>第1段階として作品名・使い方・Version・軌跡などの基本設定をNOPERA用へ更新。</li>
+            </ul>
+          </article>
+        </div>
+      </div>
     </section>
   </div>
 
@@ -3128,7 +3179,7 @@
       document.getElementById("usage-copy").textContent = config.usageText;
 
       document.getElementById("trajectory-title").textContent = config.trajectoryTitle;
-      document.getElementById("trajectory-copy").textContent = config.trajectoryText;
+      // 軌跡は静的HTMLの #plip-history-modal をそのまま表示する。
       document.getElementById("open-trajectory").textContent = "📜 " + config.trajectoryTitle;
 
       // =======================================================
