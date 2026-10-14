@@ -1257,6 +1257,8 @@
       margin-left: 1em;
     }
 
+    .nopera-reading-illustration.is-editing { outline:3px dashed #e6a500;outline-offset:4px;position:relative; }
+    .nopera-reading-illustration .nopera-editing-label {position:absolute;top:4px;left:4px;z-index:2;background:#f5c542;color:#302300;border-radius:5px;padding:3px 7px;font:700 12px/1.5 sans-serif;white-space:nowrap;pointer-events:none;box-shadow:0 1px 5px #0003;}
     .nopera-reading-illustration.is-draft {
       outline: 2px dashed rgba(245, 158, 11, .9);
       outline-offset: 4px;
@@ -2302,8 +2304,8 @@
 
       footerCredit: "© 2026 PLIP & Hiro-Seki-Tech",
       footerNotice: "無断転載及びハルシネーションはお断り申し上げます。",
-      version: "1.1",
-      updated: "2026.10.11",
+      version: "2.0",
+      updated: "2026.10.14",
 
       usageTitle: "NOPERA HOUSEの使い方",
       usageText:
@@ -2928,6 +2930,8 @@
               <option value="serif">洋書</option>
             </select>
             <button id="nopera-sound-toggle" class="nopera-preview-tool" type="button" aria-pressed="true" title="NOPERAプレビューの音楽をオン／オフ">🔊 SOUND ON</button>
+            <button id="nopera-undo" class="nopera-preview-tool" type="button" disabled title="本文を元に戻す (Ctrl+Z)">↶ 戻す</button>
+            <button id="nopera-redo" class="nopera-preview-tool" type="button" disabled title="本文をやり直す (Ctrl+Y / Ctrl+Shift+Z)">↷ 進む</button>
             <button id="nopera-edit-toggle" class="nopera-edit-button" type="button" disabled>✎ 本文編集</button>
             <span id="nopera-edit-status" class="nopera-edit-status">閲覧モード</span>
           </div>
@@ -3043,6 +3047,13 @@
       </div>
       <div id="trajectory-copy" class="trajectory-history-content">
         <div id="plip-history-modal">
+          <article>
+            <h3>Version 2.0　2026.10.14</h3>
+            <ul>
+              <li>本文・挿絵・音楽などの同時編集を防止し、本文の貼り付けをプレーンテキスト化。Undo／Redo操作を追加。</li>
+              <li>挿絵追加のキャンセル、本文編集時の位置ずれ警告、編集中の挿絵ラベルを追加し、編集操作を分かりやすく改善。</li>
+            </ul>
+          </article>
           <article>
             <h3>Version 1.1　2026.10.11</h3>
             <ul>
@@ -3518,6 +3529,57 @@
       let noperaCurrentPageIndex = 0;
       let noperaEditMode = false;
       let noperaEditBeforeText = "";
+      let noperaUndoHistory = [];
+      let noperaRedoHistory = [];
+      let noperaRestoringHistory = false;
+      const noperaUndoButton = document.getElementById("nopera-undo");
+      const noperaRedoButton = document.getElementById("nopera-redo");
+      function updateNoperaHistoryButtons() {
+        noperaUndoButton.disabled = !noperaEditMode || !noperaUndoHistory.length;
+        noperaRedoButton.disabled = !noperaEditMode || !noperaRedoHistory.length;
+      }
+      function noperaEditingKind() {
+        if (noperaEditMode) return "本文";
+        if (noperaTocEditingId !== null) return "目次";
+        if (noperaIllustrationEditingId !== null || noperaIllustrationDraft) return "挿絵";
+        if (noperaMusicEditingId !== null || noperaMusicDraft) return "音楽";
+        return null;
+      }
+      function guardNoperaEditing(kind) {
+        const active = noperaEditingKind();
+        if (active && active !== kind) {
+          alert(active + "を編集中です。保存・終了、またはキャンセルしてから操作してください。\nプレビューの閲覧・スクロールは引き続き可能です。");
+          return false;
+        }
+        return true;
+      }
+      function resetNoperaTextHistory() {
+        noperaUndoHistory = [];
+        noperaRedoHistory = [];
+        updateNoperaHistoryButtons();
+      }
+      function applyNoperaTextHistory(direction) {
+        if (!noperaEditMode) return;
+        const from = direction === "undo" ? noperaUndoHistory : noperaRedoHistory;
+        const to = direction === "undo" ? noperaRedoHistory : noperaUndoHistory;
+        if (!from.length) return;
+        const page = getNoperaPages()[noperaCurrentPageIndex];
+        const el = noperaPreviewContent.querySelector(".nopera-reading-text");
+        if (!page || !el) return;
+        const snapshot = from.pop();
+        if (snapshot.pageId !== page.id) { resetNoperaTextHistory(); return; }
+        to.push({ pageId: page.id, text: page.text });
+        noperaRestoringHistory = true;
+        const scroll = noperaPreviewContent.scrollTop;
+        // 既存のアンカー追従処理を通して本文を復元する。
+        el.innerText = snapshot.text;
+        commitNoperaPageEdit();
+        renderNoperaCurrentPage({preserveScroll:true});
+        noperaPreviewContent.scrollTop = scroll;
+        noperaPreviewContent.querySelector(".nopera-reading-text")?.focus();
+        noperaRestoringHistory = false;
+        updateNoperaHistoryButtons();
+      }
       let noperaLostAnchorWarnings = [];
       let noperaIllustrationEntries = [];
       let noperaIllustrationNextId = 1;
@@ -4273,6 +4335,7 @@
       }
 
       function readNoperaIllustrationFile(file) {
+        if (!guardNoperaEditing("挿絵")) return;
         if (!file) return;
         if (!file.type || !file.type.startsWith("image/")) {
           noperaIllustrationFileStatus.textContent = "画像ファイルを選んでください。";
@@ -4292,6 +4355,7 @@
           noperaIllustrationFileStatus.textContent =
             "✓ 「" + file.name + "」を選びました。右プレビューで配置と大きさを確認できます。";
           updateNoperaIllustrationRegisterState();
+          updateNoperaCommitButtonStyles();
           renderNoperaCurrentPage({ preserveScroll: true });
         });
         reader.addEventListener("error", () => {
@@ -4302,7 +4366,7 @@
 
       function createNoperaIllustrationElement(entry, isDraft) {
         const figure = document.createElement("span");
-        figure.className = "nopera-reading-illustration" + (isDraft ? " is-draft" : "");
+        figure.className = "nopera-reading-illustration" + (isDraft ? " is-draft is-editing" : (entry.id === noperaIllustrationEditingId ? " is-editing" : ""));
         figure.dataset.align = entry.align;
         if (!isDraft && entry.id !== undefined && entry.id !== null) {
           figure.dataset.illustrationId = String(entry.id);
@@ -4316,12 +4380,18 @@
         image.alt = entry.name || "挿絵";
         image.draggable = false;
         figure.appendChild(image);
+        if (isDraft || entry.id === noperaIllustrationEditingId) {
+          const label = document.createElement("span");
+          label.className = "nopera-editing-label";
+          label.textContent = isDraft && noperaIllustrationEditingId === null ? "✎ 挿絵を追加中" : "✎ 挿絵を編集中";
+          figure.appendChild(label);
+        }
         return figure;
       }
 
       function getNoperaPageIllustrations(page) {
         const confirmed = noperaIllustrationEntries
-          .filter(entry => entry.id !== noperaIllustrationEditingId && !entry.anchorLost && entry.insertAt >= page.start && entry.insertAt <= page.end)
+          .filter(entry => (entry.id !== noperaIllustrationEditingId || !noperaIllustrationDraft) && !entry.anchorLost && entry.insertAt >= page.start && entry.insertAt <= page.end)
           .map(entry => ({ ...entry, isDraft: false }));
 
         if (noperaIllustrationDraft && noperaIllustrationSelectedAnchor) {
@@ -4424,7 +4494,7 @@
         noperaIllustrationRegister.classList.toggle("nopera-edit-commit", noperaIllustrationEditingId !== null);
         noperaMusicRegister.classList.toggle("nopera-edit-commit", noperaMusicEditingId !== null);
         noperaTocCancel.hidden = noperaTocEditingId === null;
-        noperaIllustrationCancel.hidden = noperaIllustrationEditingId === null;
+        noperaIllustrationCancel.hidden = noperaIllustrationEditingId === null && !noperaIllustrationDraft;
         noperaMusicCancel.hidden = noperaMusicEditingId === null;
       }
 
@@ -4450,6 +4520,7 @@
       }
 
       function startNoperaIllustrationEdit(id) {
+        if (!guardNoperaEditing("挿絵")) return;
         const entry = noperaIllustrationEntries.find(item => item.id === id);
         if (!entry) return;
         if (noperaIllustrationEditingId === entry.id) { cancelNoperaIllustrationEdit(); return; }
@@ -4623,6 +4694,7 @@
       }
 
       function readNoperaMusicFile(file) {
+        if (!guardNoperaEditing("音楽")) return;
         if (!file) return;
         if (!(file.type || "").startsWith("audio/") && !/\.(mp3|m4a|wav|ogg)$/i.test(file.name)) {
           noperaMusicFileStatus.textContent = "音楽ファイルを選んでください。";
@@ -4718,6 +4790,7 @@
       }
 
       function startNoperaMusicEdit(id) {
+        if (!guardNoperaEditing("音楽")) return;
         const entry = noperaMusicEntries.find(item => item.id === id);
         if (!entry) return;
         if (noperaMusicEditingId === entry.id) { cancelNoperaMusicEdit(); return; }
@@ -5100,6 +5173,7 @@
           edit.type = "button";
           edit.textContent = entry.id === noperaTocEditingId ? "編集中" : "編集";
           edit.addEventListener("click", () => {
+            if (!guardNoperaEditing("目次")) return;
             if (noperaTocEditingId === entry.id) { cancelNoperaTocEdit(); return; }
             noperaTocEditingId = entry.id;
             noperaSelectedAnchor = null;
@@ -5149,6 +5223,7 @@
       }
 
       function registerNoperaTocEntry() {
+        if (!guardNoperaEditing("目次")) return;
         const title = noperaTocTitle.value.trim();
         if (!title) return;
 
@@ -5290,6 +5365,12 @@
       }
 
       function setNoperaEditMode(enabled) {
+        if (enabled && !guardNoperaEditing("本文")) return;
+        if (enabled && !noperaEditMode) {
+          const page = getNoperaPages()[noperaCurrentPageIndex];
+          const hasAnchors = page && (noperaIllustrationEntries.some(e => e.pageId === page.id) || noperaMusicEntries.some(m => noperaIllustrationEntries.some(e => e.id === m.illustrationId && e.pageId === page.id)));
+          if (hasAnchors && !confirm("【本文編集のご注意】\nこのページには挿絵・音楽が登録されています。文章の追加や削除で位置がずれる場合があります。\n編集後は配置をご確認ください。\n\n本文編集を開始しますか？")) return;
+        }
         if (!noperaFullText) enabled = false;
         if (noperaEditMode && !enabled) commitNoperaPageEdit();
         noperaEditMode = enabled;
@@ -5302,6 +5383,7 @@
         noperaEditToggle.classList.toggle("is-active",enabled);
         noperaEditToggle.textContent = enabled ? "✓ 編集を終了" : "✎ 本文編集";
         noperaEditStatus.textContent = enabled ? "編集中" : "閲覧モード";
+        resetNoperaTextHistory();
       }
 
       function getNoperaPages() {
@@ -6200,7 +6282,36 @@
       noperaTocRegister.addEventListener("click", registerNoperaTocEntry);
       noperaTocCancel.addEventListener("click", cancelNoperaTocEdit);
       noperaEditToggle.addEventListener("click", () => setNoperaEditMode(!noperaEditMode));
-      noperaPreviewContent.addEventListener("input", () => { if (noperaEditMode) commitNoperaPageEdit(); });
+      noperaPreviewContent.addEventListener("paste", event => {
+        if (!noperaEditMode || !event.target.closest('.nopera-reading-text')) return;
+        event.preventDefault();
+        const plain = event.clipboardData?.getData("text/plain") || "";
+        document.execCommand("insertText", false, plain);
+      });
+      noperaPreviewContent.addEventListener("input", () => {
+        if (!noperaEditMode) return;
+        if (!noperaRestoringHistory) {
+          const page = getNoperaPages()[noperaCurrentPageIndex];
+          const now = noperaPreviewContent.querySelector(".nopera-reading-text")?.innerText.replace(/\r\n?/g,"\n");
+          if (page && now !== page.text) {
+            noperaUndoHistory.push({pageId:page.id,text:page.text});
+            if (noperaUndoHistory.length > 100) noperaUndoHistory.shift();
+            noperaRedoHistory = [];
+          }
+        }
+        commitNoperaPageEdit();
+        updateNoperaHistoryButtons();
+      });
+      noperaUndoButton.addEventListener("click", () => applyNoperaTextHistory("undo"));
+      noperaRedoButton.addEventListener("click", () => applyNoperaTextHistory("redo"));
+      noperaPreviewContent.addEventListener("keydown", event => {
+        if (!noperaEditMode || !(event.ctrlKey || event.metaKey) || event.altKey) return;
+        const key = event.key.toLowerCase();
+        if (key === "z" || key === "y") {
+          event.preventDefault();
+          applyNoperaTextHistory(key === "y" || event.shiftKey ? "redo" : "undo");
+        }
+      });
 
       noperaPagePrev.addEventListener("click", () => {
         if (noperaEditMode) commitNoperaPageEdit();
