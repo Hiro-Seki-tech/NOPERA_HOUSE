@@ -2701,7 +2701,7 @@
           <h2>挿絵</h2>
           <button class="help-dot" type="button"
                   data-help-title="挿絵の説明"
-                  data-help-text="【ここでできること】本文中の好きな位置に画像を置きます。&#10;&#10;【操作手順】① 右の本文で、挿絵を置きたい位置の直前の文字を選択します。② 画像をドラッグ＆ドロップするか「画像ファイルを選ぶ」で指定します。③ 挿絵名、左・中央・右の配置、大きさを決めて登録します。&#10;&#10;【編集】登録一覧から編集・削除できます。編集中の画像差し替えも可能です。途中でやめるときは「キャンセル」を押します。&#10;&#10;【保存先】画像フォルダ名は空欄でも大丈夫です。公開用ZIPでは素材を自動配置し、同じファイル名があっても必要に応じて連番で区別します。同じ画像を別の場所で使うこともできます。"
+                  data-help-text="【ここでできること】本文中の好きな位置に画像を置きます。&#10;&#10;【操作手順】① 右の本文で、挿絵を置きたい位置の直前の文字を選択します。② 画像をドラッグ＆ドロップするか「画像ファイルを選ぶ」で指定します。③ 挿絵名、左・中央・右の配置、大きさを決めて登録します。&#10;&#10;【編集】登録一覧から編集・削除できます。編集中の画像差し替えも可能です。途中でやめるときは「キャンセル」を押します。&#10;&#10;【保存先】画像フォルダ名は空欄でも大丈夫です。公開用ZIPでは素材を自動配置し、同じファイル名があっても必要に応じて連番で区別します。同じ画像を別の場所で使うこともできます。&#10;&#10;【画像形式】JPEG（.jpg／.jpeg）・PNG（.png）に対応しています。写真や一般的な挿絵は、容量を抑えやすいJPEGをおすすめします。透過画像にはPNGが向いています。"
                   aria-label="挿絵の詳しい説明">？</button>
         </div>
         <p class="nopera-section-lead">本文の流れに合わせて挿絵を配置します。</p>
@@ -2736,6 +2736,7 @@
               <input id="nopera-illustration-file-input" type="file" accept="image/*" hidden>
             </div>
           </div>
+          <div class="nopera-illustration-copy" style="margin-top:9px;">対応形式：JPEG（.jpg／.jpeg）、PNG（.png）。容量を抑えやすいJPEGがおすすめです。</div>
           <div id="nopera-illustration-file-status" class="nopera-illustration-copy" style="margin-top:9px;" role="status" aria-live="polite">画像を選ぶと、右のNOPERAプレビューに仮表示します。</div>
           <label class="nopera-illustration-label" style="margin-top:12px;">
             挿絵の名前（自由に入力できます）
@@ -2809,7 +2810,7 @@
           <h2>音楽</h2>
           <button class="help-dot" type="button"
                   data-help-title="音楽の説明"
-                  data-help-text="【ここでできること】登録済みの挿絵をきっかけに音楽を鳴らす、または再生中の音楽を静かに終える演出を設定します。音楽のない挿絵があっても構いません。&#10;&#10;【操作手順】① 音楽を付ける挿絵を選びます（1つの挿絵につき最大1つの音楽演出）。② 「音楽を再生する」または「現在の音楽を5秒かけてフェードアウトする」を選びます。③ 再生する場合は音楽ファイルを指定し、曲名と1回再生／ループ再生を設定して登録します。&#10;&#10;【再生】読書中、対象の挿絵が画面中央付近に来ると再生します。別の曲へ移るときは前の曲を約3秒かけてフェードアウトします。SOUND OFFでは音楽を鳴らしません。&#10;&#10;【編集】登録一覧から試聴・編集・削除できます。編集中は「キャンセル」で取り消せます。音楽フォルダ名は空欄でも構いません。"
+                  data-help-text="【ここでできること】登録済みの挿絵をきっかけに音楽を鳴らす、または再生中の音楽を静かに終える演出を設定します。音楽のない挿絵があっても構いません。&#10;&#10;【操作手順】① 音楽を付ける挿絵を選びます（1つの挿絵につき最大1つの音楽演出）。② 「音楽を再生する」または「現在の音楽を5秒かけてフェードアウトする」を選びます。③ 再生する場合は音楽ファイルを指定し、曲名と1回再生／ループ再生を設定して登録します。&#10;&#10;【再生】読書中、対象の挿絵が画面中央付近に来ると再生します。別の曲へ移るときは前の曲を約3秒かけてフェードアウトします。SOUND OFFでは音楽を鳴らしません。&#10;&#10;【編集】登録一覧から試聴・編集・削除できます。編集中は「キャンセル」で取り消せます。音楽フォルダ名は空欄でも構いません。&#10;&#10;【音楽形式】MP3（.mp3）をおすすめします。M4A（.m4a）・WAV（.wav）・OGG（.ogg）も登録できますが、再生できる形式はブラウザや端末によって異なります。"
                   aria-label="音楽の詳しい説明">？</button>
         </div>
         <p class="nopera-section-lead">挿絵をきっかけに音楽を再生したり、現在の音楽をゆっくり終わらせたりできます。</p>
@@ -2846,6 +2847,7 @@
               <input id="nopera-music-file-input" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg" hidden>
             </div>
           </div>
+          <div class="nopera-illustration-copy" style="margin-top:9px;">推奨形式：MP3（.mp3）。M4A・WAV・OGGも登録できますが、再生対応はブラウザによって異なります。</div>
           <div id="nopera-music-file-status" class="nopera-illustration-copy" style="margin-top:9px;" role="status" aria-live="polite">音楽ファイルを選んでください。</div>
           <label class="nopera-illustration-label" style="margin-top:12px;">曲名
             <input id="nopera-music-name" class="nopera-illustration-input" type="text" placeholder="例：神剣サルヴァドゥ" aria-label="曲名">
