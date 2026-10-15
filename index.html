@@ -2282,6 +2282,11 @@
     #nopera-public-load-status summary { cursor: pointer; font-weight: 600; }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
+<style id="nopera-music-preview-tip-style">
+.nopera-music-preview-wrap { position: relative; display: inline-flex; }
+.nopera-music-preview-tip { position: absolute; left: 0; bottom: calc(100% + 10px); width: max-content; max-width: min(280px, 75vw); white-space: normal; z-index: 100; padding: 9px 12px; border-radius: 9px; border: 1px solid #fbbf24; background: #1e293b; color: #fff7db; font-size: 12px; line-height: 1.5; box-shadow: 0 5px 18px rgba(0,0,0,.4); pointer-events: none; }
+.nopera-music-preview-tip::after { content: ""; position: absolute; top: 100%; left: 22px; border: 6px solid transparent; border-top-color: #fbbf24; }
+</style>
 </head>
 
 <body>
@@ -2304,7 +2309,7 @@
 
       footerCredit: "© 2026 PLIP & Hiro-Seki-Tech",
       footerNotice: "無断転載及びハルシネーションはお断り申し上げます。",
-      version: "3.0",
+      version: "4.0",
       updated: "2026.10.15",
 
       usageTitle: "NOPERA HOUSEの使い方",
@@ -3049,6 +3054,13 @@
       </div>
       <div id="trajectory-copy" class="trajectory-history-content">
         <div id="plip-history-modal">
+          <article>
+            <h3>Version 4.0　2026.10.15</h3>
+            <ul>
+              <li>挿絵・音楽の対応ファイル形式と推奨形式をヘルプに明記。</li>
+              <li>SOUND OFFで試聴を押した際、ボタン付近に音声を有効にする案内を表示。</li>
+            </ul>
+          </article>
           <article>
             <h3>Version 3.0　2026.10.15</h3>
             <ul>
@@ -4919,7 +4931,26 @@
           const actions = document.createElement("div"); actions.style.display="flex"; actions.style.flexWrap="wrap"; actions.style.gap="7px"; actions.style.marginTop="8px";
           const makeButton=(label,handler)=>{const b=document.createElement("button");b.type="button";b.className="nopera-ui-button";b.style.padding="7px 10px";b.style.minHeight="36px";b.textContent=label;b.addEventListener("click",handler);return b;};
           const isPreviewingThis = noperaMusicPreviewAudio && Number(noperaMusicPreviewAudio.noperaMusicEntryId) === Number(entry.id);
-          if (!isFadeout) actions.append(makeButton(isPreviewingThis ? "■ 試聴停止" : "▶ 試聴", () => previewNoperaMusic(entry)));
+          if (!isFadeout) {
+            const previewWrap = document.createElement("span");
+            previewWrap.className = "nopera-music-preview-wrap";
+            const previewButton = makeButton(isPreviewingThis ? "■ 試聴停止" : "▶ 試聴", () => {
+              if (!noperaSoundEnabled && !isPreviewingThis) {
+                const existing = previewWrap.querySelector(".nopera-music-preview-tip");
+                if (existing) existing.remove();
+                const tip = document.createElement("span");
+                tip.className = "nopera-music-preview-tip";
+                tip.setAttribute("role", "status");
+                tip.textContent = "🔊 試聴するには、プレビューの「SOUND ON」を押して音声を有効にしてください。";
+                previewWrap.appendChild(tip);
+                window.setTimeout(() => { if (tip.isConnected) tip.remove(); }, 4500);
+                return;
+              }
+              previewNoperaMusic(entry);
+            });
+            previewWrap.appendChild(previewButton);
+            actions.appendChild(previewWrap);
+          }
           actions.append(makeButton(entry.id === noperaMusicEditingId ? "編集中" : "編集", () => startNoperaMusicEdit(entry.id)), makeButton("削除", () => deleteNoperaMusic(entry.id)));
           row.append(title, meta, actions); noperaMusicList.appendChild(row);
         });
